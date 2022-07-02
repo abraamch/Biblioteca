@@ -20,6 +20,11 @@ namespace Biblioteca
     {
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddRazorPages();
+            services.AddSession();
+
+
             services.AddControllersWithViews();
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -28,13 +33,13 @@ namespace Biblioteca
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             services.AddDbContext<BibliotecaDatabaseContext>(options =>
-            options.UseSqlServer(Configuration["ConnectionString:EscuelaDBConnection"
-            ]));
+            options.UseSqlServer(Configuration["ConnectionString:EscuelaDBConnection"]));
             services.AddMvc().AddNewtonsoftJson(options =>
            options.SerializerSettings.ReferenceLoopHandling =
            ReferenceLoopHandling.Ignore)
 
            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
         }
         public Startup(IConfiguration configuration)
         {
@@ -49,6 +54,7 @@ namespace Biblioteca
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -63,7 +69,7 @@ namespace Biblioteca
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -72,6 +78,14 @@ namespace Biblioteca
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Login}/{id?}");
+                endpoints.MapRazorPages();
+            });
+            
         }
     }
 }

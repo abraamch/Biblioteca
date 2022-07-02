@@ -4,14 +4,16 @@ using Biblioteca.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Biblioteca.Migrations
 {
     [DbContext(typeof(BibliotecaDatabaseContext))]
-    partial class BibliotecaDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220701041454_A")]
+    partial class A
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,6 +35,9 @@ namespace Biblioteca.Migrations
                     b.Property<int>("CantPaginas")
                         .HasColumnType("int");
 
+                    b.Property<bool>("EstaReservado")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Genero")
                         .HasColumnType("int");
 
@@ -40,50 +45,52 @@ namespace Biblioteca.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Tapa")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("VencimientoEntrega")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UsuarioId");
+
                     b.ToTable("Libros");
                 });
 
-            modelBuilder.Entity("Biblioteca.Models.LibroUsuario", b =>
+            modelBuilder.Entity("Biblioteca.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AutorLibro")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GeneroLibro")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MailUsuario")
+                    b.Property<string>("contrasenia")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NombreLibro")
+                    b.Property<string>("dni")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PaginasLibro")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TapaLibro")
+                    b.Property<string>("nombreApellido")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("VencimientoLibro")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("user")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("LibrosDeUsuarios");
+                    b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("Biblioteca.Models.Libro", b =>
+                {
+                    b.HasOne("Biblioteca.Models.Usuario", null)
+                        .WithMany("LibrosEnUso")
+                        .HasForeignKey("UsuarioId");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,17 +1,21 @@
 ﻿@model IEnumerable<Biblioteca.Models.Libro>
 
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Catalogo</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Ingresar nuevo libro</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Tapa)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.CantPaginas)
             </th>
@@ -22,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.Autor)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.GeneroLiterario)
+                @Html.DisplayNameFor(model => model.Genero)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.VencimientoEntrega)
@@ -31,8 +35,13 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var item in Model)
+            
+                {
+        <tr> 
+            <td>
+                <img src="@Url.Content(item.Tapa)" alt="Image" width="200" height="200" />
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CantPaginas)
             </td>
@@ -43,17 +52,17 @@
                 @Html.DisplayFor(modelItem => item.Autor)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GeneroLiterario)
+                @Html.DisplayFor(modelItem => item.Genero)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.VencimientoEntrega)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="ReservarLibro" asp-route-id="@item.Id">Reservar</a> |
             </td>
         </tr>
-}
+                }
+            
+
     </tbody>
 </table>

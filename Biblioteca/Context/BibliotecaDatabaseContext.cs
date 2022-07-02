@@ -15,7 +15,7 @@ namespace Biblioteca.Context
         {
         }
         public DbSet<Libro> Libros { get; set; }
-      
+        public DbSet<LibroUsuario> LibrosDeUsuarios { get; set; }
     }
 }
 

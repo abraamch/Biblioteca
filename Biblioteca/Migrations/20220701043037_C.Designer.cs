@@ -4,14 +4,16 @@ using Biblioteca.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Biblioteca.Migrations
 {
     [DbContext(typeof(BibliotecaDatabaseContext))]
-    partial class BibliotecaDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220701043037_C")]
+    partial class C
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,14 +35,13 @@ namespace Biblioteca.Migrations
                     b.Property<int>("CantPaginas")
                         .HasColumnType("int");
 
+                    b.Property<bool>("EstaReservado")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Genero")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tapa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -50,40 +51,6 @@ namespace Biblioteca.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Libros");
-                });
-
-            modelBuilder.Entity("Biblioteca.Models.LibroUsuario", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AutorLibro")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GeneroLibro")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MailUsuario")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NombreLibro")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaginasLibro")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TapaLibro")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("VencimientoLibro")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LibrosDeUsuarios");
                 });
 #pragma warning restore 612, 618
         }

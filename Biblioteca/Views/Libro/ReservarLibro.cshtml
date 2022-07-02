@@ -1,0 +1,30 @@
+﻿@model Biblioteca.Models.Libro
+
+@{
+    ViewData["Title"] = "ReservarLibro";
+}
+
+<h1>ReservarLibro</h1>
+
+<h4>Libro</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ReservarLibro" method="post">
+
+            <img src="@Url.Content(Model.Tapa)" alt="Image" width="200" height="200" />
+
+            "@Html.DisplayFor(model => model.Nombre)"
+              <br />
+            <div class="form-group">
+
+                <input type="submit" value="ReservarLibro" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">No Reservar</a>
+</div>
+

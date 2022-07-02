@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Biblioteca.Migrations
 {
     [DbContext(typeof(BibliotecaDatabaseContext))]
-    [Migration("20220620223138_Biblioteca.Context.BibliotecaDatabaseContext")]
-    partial class BibliotecaContextBibliotecaDatabaseContext
+    [Migration("20220701192014_V")]
+    partial class V
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.26")
+                .HasAnnotation("ProductVersion", "3.1.25")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -29,15 +29,21 @@ namespace Biblioteca.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Autor")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CantPaginas")
                         .HasColumnType("int");
 
-                    b.Property<string>("GeneroLiterario")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Genero")
+                        .HasColumnType("int");
 
                     b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tapa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("VencimientoEntrega")
@@ -46,6 +52,34 @@ namespace Biblioteca.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Libros");
+                });
+
+            modelBuilder.Entity("Biblioteca.Models.LibroUsuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GeneroLibro")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MailUsuario")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreLibro")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaginasLibro")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("VencimientoLibro")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LibrosDeUsuarios");
                 });
 #pragma warning restore 612, 618
         }

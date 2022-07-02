@@ -1,0 +1,67 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Biblioteca.Areas.Identity.Data
+@model IEnumerable<Biblioteca.Models.LibroUsuario>
+@inject UserManager<BibliotecaUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+<h1>Mis Libros</h1>
+
+<p>
+
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TapaLibro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaginasLibro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreLibro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GeneroLibro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VencimientoLibro)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (item.MailUsuario == UserManager.GetUserName(User)) { 
+        <tr>
+            <td>
+                <img src="@Url.Content(item.TapaLibro)" alt="Image" width="200" height="200" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaginasLibro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreLibro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GeneroLibro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VencimientoLibro)
+            </td>
+            <td>
+                <a asp-action="DevolverLibro" asp-route-id="@item.Id">Devolver</a>
+            </td>
+        </tr>
+            
+            
+            
+            }
+            
+        }
+    </tbody>
+</table>

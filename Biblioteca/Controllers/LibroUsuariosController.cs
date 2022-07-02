@@ -7,36 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Biblioteca.Context;
 using Biblioteca.Models;
-using Microsoft.AspNetCore.Authorization;
-using Biblioteca.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
-using Biblioteca.Data;
+using Biblioteca.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Biblioteca.Controllers
 {
-   
-    public class LibroController : Controller
+    public class LibroUsuariosController : Controller
     {
-        private readonly UserManager<BibliotecaUser> _userManager;
         private readonly BibliotecaDatabaseContext _context;
-        private readonly BibliotecaContext _context1;
-
-        public LibroController(BibliotecaDatabaseContext context, BibliotecaContext context1, UserManager<BibliotecaUser> userManager)
+        private readonly UserManager<BibliotecaUser> _userManager;
+        public LibroUsuariosController(BibliotecaDatabaseContext context, UserManager<BibliotecaUser> userManager)
         {
-            _context = context;
-            _context1 = context1;
             _userManager = userManager;
+            _context = context;
         }
 
-        // GET: Libro
+        // GET: LibroUsuarios
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Libros.ToListAsync());
+            return View(await _context.LibrosDeUsuarios.ToListAsync());
         }
 
-        // GET: Libro/Details/5
+        // GET: LibroUsuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,41 +38,39 @@ namespace Biblioteca.Controllers
                 return NotFound();
             }
 
-            var libro = await _context.Libros
+            var libroUsuario = await _context.LibrosDeUsuarios
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (libro == null)
+            if (libroUsuario == null)
             {
                 return NotFound();
             }
 
-            return View(libro);
+            return View(libroUsuario);
         }
 
-        // GET: Libro/Create
-        [Authorize]
+        // GET: LibroUsuarios/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Libro/Create
+        // POST: LibroUsuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CantPaginas,Nombre,Tapa,Autor,Genero")] Libro libro)
+        public async Task<IActionResult> Create([Bind("Id,MailUsuario,PaginasLibro,NombreLibro,GeneroLibro,VencimientoLibro")] LibroUsuario libroUsuario)
         {
-            libro.VencimientoEntrega = DateTime.Today;
             if (ModelState.IsValid)
             {
-                _context.Add(libro);
+                _context.Add(libroUsuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(libro);
+            return View(libroUsuario);
         }
 
-        // GET: Libro/Edit/5
+        // GET: LibroUsuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,23 +78,22 @@ namespace Biblioteca.Controllers
                 return NotFound();
             }
 
-            var libro = await _context.Libros.FindAsync(id);
-            if (libro == null)
+            var libroUsuario = await _context.LibrosDeUsuarios.FindAsync(id);
+            if (libroUsuario == null)
             {
                 return NotFound();
             }
-            return View(libro);
+            return View(libroUsuario);
         }
 
-        // POST: Libro/Edit/5
+        // POST: LibroUsuarios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CantPaginas,Nombre,Tapa,Autor,Genero")] Libro libro)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MailUsuario,PaginasLibro,NombreLibro,GeneroLibro,VencimientoLibro")] LibroUsuario libroUsuario)
         {
-
-            if (id != libro.Id)
+            if (id != libroUsuario.Id)
             {
                 return NotFound();
             }
@@ -111,12 +102,12 @@ namespace Biblioteca.Controllers
             {
                 try
                 {
-                    _context.Update(libro);
+                    _context.Update(libroUsuario);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LibroExists(libro.Id))
+                    if (!LibroUsuarioExists(libroUsuario.Id))
                     {
                         return NotFound();
                     }
@@ -127,10 +118,10 @@ namespace Biblioteca.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(libro);
+            return View(libroUsuario);
         }
 
-        // GET: Libro/Delete/5
+        // GET: LibroUsuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -138,61 +129,60 @@ namespace Biblioteca.Controllers
                 return NotFound();
             }
 
-            var libro = await _context.Libros
+            var libroUsuario = await _context.LibrosDeUsuarios
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (libro == null)
+            if (libroUsuario == null)
             {
                 return NotFound();
             }
 
-            return View(libro);
-        }                                                                                                                                                                                                                                                                                                       
+            return View(libroUsuario);
+        }
 
-        // POST: Libro/Delete/5
+        // POST: LibroUsuarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var libro = await _context.Libros.FindAsync(id);
-            _context.Libros.Remove(libro);
+            var libroUsuario = await _context.LibrosDeUsuarios.FindAsync(id);
+            _context.LibrosDeUsuarios.Remove(libroUsuario);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LibroExists(int id)
+        private bool LibroUsuarioExists(int id)
         {
-            return _context.Libros.Any(e => e.Id == id);
+            return _context.LibrosDeUsuarios.Any(e => e.Id == id);
         }
-       
-        [HttpPost,  ActionName("ReservarLibro")]
-        public async Task<IActionResult> ReservarLibroConfirmed(Libro libro)
+        [HttpPost, ActionName("DevolverLibro")]
+        public async Task<IActionResult> DevolverLibroConfirmed(LibroUsuario libroUsuario)
         {
-            int id = libro.Id;
-            var usuario = await _userManager.GetUserAsync(User);
-            libro = await _context.FindAsync<Libro>(id);
-            await _context1.SaveChangesAsync();
-            LibroUsuario libroUser = new LibroUsuario();
-            libroUser.MailUsuario = usuario.Email;
-            libroUser.PaginasLibro = libro.CantPaginas;
-            libroUser.NombreLibro = libro.Nombre;
-            libroUser.VencimientoLibro = libro.VencimientoEntrega.AddDays(15);
-            libroUser.GeneroLibro = libro.Genero;
-            libroUser.AutorLibro = libro.Autor;
-            libroUser.TapaLibro = libro.Tapa;
-            _context.LibrosDeUsuarios.Add(libroUser);
-            _context.Libros.Remove(libro);
+            int id = libroUsuario.Id;
+            
+            libroUsuario = await _context.FindAsync<LibroUsuario>(id);
+            
+            Libro libro = new Libro();
+            libro.CantPaginas = libroUsuario.PaginasLibro;
+            libro.Nombre = libroUsuario.NombreLibro;
+            libro.Tapa = libroUsuario.TapaLibro;
+            libro.Autor = libroUsuario.AutorLibro;
+            libro.Genero = libroUsuario.GeneroLibro;
+            libro.VencimientoEntrega = libroUsuario.VencimientoLibro;
+            _context.Libros.Add(libro);
+            _context.LibrosDeUsuarios.Remove(libroUsuario);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index","LibroUsuarios");
+            return RedirectToAction("Index", "LibroUsuarios");
         }
-        public async Task<IActionResult> ReservarLibro(int? id)
+
+        public async Task<IActionResult> DevolverLibro(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var libro = await _context.Libros
+            var libro = await _context.LibrosDeUsuarios
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (libro == null)
             {
@@ -201,7 +191,5 @@ namespace Biblioteca.Controllers
 
             return View(libro);
         }
-
-
     }
 }
